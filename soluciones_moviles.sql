@@ -12,7 +12,6 @@ create tablespace soluciones_moviles_index
 datafile 'soluciones_moviles_index.dbf' 
 size 2M;
 
-
 /* USUARIO ABD PARA LA CREACION DE TABLAS */
 create user ABD identified by ABD;
 grant CREATE TABLE, CREATE SESSION, CREATE VIEW, CREATE TRIGGER, CREATE ROLE to ABD with ADMIN OPTION;
@@ -120,7 +119,7 @@ create table patrocina(
 tablespace soluciones_moviles_datos;
 
 /* Generar id */
-create trigger id_generador_universidad
+create or replace trigger id_generador_universidad
 before insert on universidad
 referencing new as new 
 for each row
@@ -131,11 +130,13 @@ begin
    
    if (temp>=1) then
       :new.id = temp+1
+   else 
+      :new.id = 1
    end if
 end
 /
 
-create trigger id_generador_usuario
+create or replace trigger id_generador_usuario
 before insert on usuario
 referencing new as new 
 for each row
@@ -146,11 +147,13 @@ begin
    
    if (temp>=1) then
       :new.id = temp+1
+   else 
+      :new.id = 1
    end if
 end
 /
 
-create trigger id_generador_evento
+create or replace trigger id_generador_evento
 before insert on evento
 referencing new as new 
 for each row
@@ -161,11 +164,13 @@ begin
    
    if (temp>=1) then
       :new.id = temp+1
+   else 
+      :new.id = 1
    end if
 end
 /
 
-create trigger id_generador_empresa
+create or replace trigger id_generador_empresa
 before insert on empresa
 referencing new as new 
 for each row
@@ -176,6 +181,8 @@ begin
    
    if (temp>=1) then
       :new.id = temp+1
+   else 
+      :new.id = 1
    end if
 end
 /
