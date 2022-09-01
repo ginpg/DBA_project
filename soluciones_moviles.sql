@@ -122,7 +122,7 @@ tablespace soluciones_moviles_datos;
 /* Generar id */
 create trigger id_generador_universidad
 before insert on universidad
-referencing new as new old as old
+referencing new as new 
 for each row
 declare temp
 begin
@@ -137,7 +137,7 @@ end
 
 create trigger id_generador_usuario
 before insert on usuario
-referencing new as new old as old
+referencing new as new 
 for each row
 declare temp
 begin
@@ -152,7 +152,7 @@ end
 
 create trigger id_generador_evento
 before insert on evento
-referencing new as new old as old
+referencing new as new 
 for each row
 declare temp
 begin
@@ -167,7 +167,7 @@ end
 
 create trigger id_generador_empresa
 before insert on empresa
-referencing new as new old as old
+referencing new as new 
 for each row
 declare temp
 begin
@@ -180,16 +180,30 @@ begin
 end
 /
 
-/* Hasta aqui se ha ejecutado bien */ 
 /* ROLES*/
 create role Organizador;
 grant select, insert, delete, update
-on usuario, evento, participa, dicta
+on usuario
+to Organizador;
+grant select, insert, delete, update
+on evento
+to Organizador;
+grant select, insert, delete, update
+on participa
+to Organizador;
+grant select, insert, delete, update
+on dicta
 to Organizador;
 
 create role Administrador;
 grant select, insert, delete, update
-on universidad, empresa, patrocina
+on universidad
+to Administrador;
+grant select, insert, delete, update
+on empresa
+to Administrador;
+grant select, insert, delete, update
+on patrocina
 to Administrador;
 
 /* INDEX */
@@ -215,8 +229,10 @@ tablespace soluciones_moviles_index;
 
 /* TRIGGERS */
 /* Evitar que participante sea expositor y viceversa */
-create trigger 
+create trigger restriccion1
 before insert on dicta
+referencing new as new 
+for each row
 declare temp
 begin
    select id into temp
@@ -229,8 +245,10 @@ begin
 end
 /
 
-create trigger 
+create trigger restriccion2
 before insert on participa
+referencing new as new 
+for each row
 declare temp
 begin
    select id into tem
@@ -243,3 +261,4 @@ begin
 end
 /
 
+/* Hasta aqui se ha ejecutado bien. Hay que probar con datos a ver si funciona correctamente*/ 
