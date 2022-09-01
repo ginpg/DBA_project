@@ -23,7 +23,7 @@ alter user ABD quota unlimited on soluciones_moviles_index;
 --#region Create tablas
 create table universidad(
    id INT,
-   acronimo VARCHAR2(10),
+   acronimo VARCHAR2(10) UNIQUE,
    nombre VARCHAR2(30),
    descripcion VARCHAR2(150),
    f_creacion DATE,
@@ -192,6 +192,7 @@ end
 
 --#region Roles 
 create role Organizador;
+grant create session to Organizador;
 grant select, insert, delete, update
 on usuario
 to Organizador;
@@ -206,6 +207,7 @@ on dicta
 to Organizador;
 
 create role Administrador;
+grant create session to Administrador;
 grant select, insert, delete, update
 on universidad
 to Administrador;
@@ -215,6 +217,15 @@ to Administrador;
 grant select, insert, delete, update
 on patrocina
 to Administrador;
+--#endregion
+
+--#region Asignacion de roles as sys
+create user Administrador1 identified by Administrador1;
+grant Administrador to Administrador1;
+
+create user Organizador1 identified by Organizador1;
+grant Organizador to Organizador1;
+
 --#endregion
 
 --#region Accesos rapidos
