@@ -3,7 +3,7 @@ select  tablespace_name,
         bytes / 1024/ 1024  MB
 from    dba_data_files;
 
-/* Tablespaces para los archivos de datos y el de indices */
+--#region Tablespaces para los archivos de datos y el de indices
 create  tablespace soluciones_moviles_datos
 datafile 'soluciones_moviles_datos.dbf' 
 size 8M;
@@ -11,15 +11,16 @@ size 8M;
 create tablespace soluciones_moviles_index
 datafile 'soluciones_moviles_index.dbf' 
 size 2M;
+--#endregion
 
-/* USUARIO ABD PARA LA CREACION DE TABLAS */
+--#region Usuario ABD para la creacion de tablas
 create user ABD identified by ABD;
 grant CREATE TABLE, CREATE SESSION, CREATE VIEW, CREATE TRIGGER, CREATE ROLE to ABD with ADMIN OPTION;
 alter user ABD quota unlimited on soluciones_moviles_datos;
 alter user ABD quota unlimited on soluciones_moviles_index;
+--#endregion
 
-
-/* Creacion de tablas */
+--#region Create tablas
 create table universidad(
    id INT,
    acronimo VARCHAR2(10),
@@ -117,8 +118,9 @@ create table patrocina(
     REFERENCES evento(id)
 ) 
 tablespace soluciones_moviles_datos;
+--#endregion
 
-/* Generar id */
+--#region Generar IDs
 create or replace trigger id_generador_universidad
 before insert on universidad
 referencing new as new 
@@ -186,8 +188,9 @@ begin
    end if
 end
 /
+--#endregion 
 
-/* ROLES*/
+--#region Roles 
 create role Organizador;
 grant select, insert, delete, update
 on usuario
@@ -212,8 +215,9 @@ to Administrador;
 grant select, insert, delete, update
 on patrocina
 to Administrador;
+--#endregion
 
-/* INDEX */
+--#region Accesos rapidos
 /* Acceso rapido para charlas de un evento y sus expositores */
 create index index_expositores
 on dicta(usuario_fk)
@@ -231,11 +235,10 @@ tablespace soluciones_moviles_index;
 create index index_patrocinados
 on patrocina(evento_fk)
 tablespace soluciones_moviles_index;
-
 /* No se crearon index para claves primarias dado a que Oracle los crea automaticamente */
+--#endregion
 
-/* TRIGGERS */
-/* Evitar que participante sea expositor y viceversa */
+--#region TRIGGER. Evitar que participante sea expositor y viceversa
 create trigger restriccion1
 before insert on dicta
 referencing new as new 
@@ -267,5 +270,7 @@ begin
    end if
 end
 /
+--#endregion
+
 
 /* Hasta aqui se ha ejecutado bien. Hay que probar con datos a ver si funciona correctamente*/ 
