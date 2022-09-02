@@ -1,0 +1,9 @@
+SELECT owner, object_name, object_type
+FROM all_objects
+WHERE object_type IN ('TABLE','VIEW')
+AND object_name = 'UNIVERSIDAD';
+
+
+select TABLE_NAME, PRIVILEGE from USER_TAB_PRIVS;
+
+SELECT * FROM universidad;

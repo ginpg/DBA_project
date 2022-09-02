@@ -121,17 +121,22 @@ tablespace soluciones_moviles_datos;
 --#endregion
 
 --#region Generar IDs
-create or replace trigger id_generador_universidad
-before insert on universidad
+create or replace TRIGGER id_generador_universidad
+before insert on abd.universidad
 referencing new as new 
 for each row
 declare temp
 begin
-   select max(id) into temp
-   from universidad
+   select max(id) into max_id
+   from abd.universidad
    
-   if (temp>=1) then
-      :new.id = temp+1
+   select count(*) into nrows
+   from abd.universidad
+
+   PRINT nrows
+
+   if (nrows>0) then
+      :new.id = max_id+1
    else 
       :new.id = 1
    end if
@@ -193,29 +198,31 @@ end
 --#region Roles 
 create role Organizador;
 grant create session to Organizador;
+/*alter role Organizador quota unlimited on soluciones_moviles_datos;*/
 grant select, insert, delete, update
-on usuario
+on abd.usuario
 to Organizador;
 grant select, insert, delete, update
-on evento
+on abd.evento
 to Organizador;
 grant select, insert, delete, update
-on participa
+on abd.participa
 to Organizador;
 grant select, insert, delete, update
-on dicta
+on abd.dicta
 to Organizador;
 
 create role Administrador;
+/*alter role Administrador quota unlimited on soluciones_moviles_datos;*/
 grant create session to Administrador;
 grant select, insert, delete, update
-on universidad
+on abd.universidad
+to Administrador1;
+grant select, insert, delete, update
+on abd.empresa
 to Administrador;
 grant select, insert, delete, update
-on empresa
-to Administrador;
-grant select, insert, delete, update
-on patrocina
+on abd.patrocina
 to Administrador;
 --#endregion
 
