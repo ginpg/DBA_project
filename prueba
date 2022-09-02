@@ -7,3 +7,47 @@ AND object_name = 'UNIVERSIDAD';
 select TABLE_NAME, PRIVILEGE from USER_TAB_PRIVS;
 
 SELECT * FROM universidad;
+
+--
+
+create tablespace test
+datafile 'test.dbf' 
+size 2M;
+alter user ABD quota unlimited on test;
+
+CREATE TABLE tabla(
+   id INT,
+   descripcion VARCHAR2(150),
+   PRIMARY KEY (id)
+)
+tablespace test;
+
+
+create or replace TRIGGER id_generador
+before insert on TABLA
+referencing new as new
+for each row
+declare nrows INT; max_id INT;
+begin
+    
+    select max(id) into max_id
+    from abd.tabla; 
+    select count(*) into nrows
+    from abd.tabla;
+
+    dbms_output.put_line(nrows || '|' || max_id);
+
+    if (nrows=0) then
+      :new.id := 1;
+    else 
+      :new.id := max_id+1;
+    end if;
+end;
+/
+
+INSERT INTO TABLA (id, descripcion) VALUES (1,'PRUEBA');
+
+SHOW ERRORS TRIGGER id_generador;
+
+SET SERVEROUTPUT ON;
+SET ECHO ON;

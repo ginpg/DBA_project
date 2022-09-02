@@ -24,7 +24,7 @@ alter user ABD quota unlimited on soluciones_moviles_index;
 create table universidad(
    id INT,
    acronimo VARCHAR2(10) UNIQUE,
-   nombre VARCHAR2(30),
+   nombre VARCHAR2(50),
    descripcion VARCHAR2(150),
    f_creacion DATE,
    PRIMARY KEY (id)
@@ -34,7 +34,7 @@ tablespace soluciones_moviles_datos;
 create table usuario(
    id INT,
    correo VARCHAR2(50) UNIQUE,
-   nombre VARCHAR2(30),
+   nombre VARCHAR2(50),
    apellido VARCHAR2(30),
    contrasena VARCHAR2(30),
    direccion VARCHAR2(100),
@@ -46,7 +46,7 @@ tablespace soluciones_moviles_datos;
 create table pertenece(
    universidad_fk INT,
    usuario_fk INT,
-   f_registro DATE,
+   f_registro timestamp default current_timestamp,
    CONSTRAINT pertenece_fk
     FOREIGN KEY (universidad_fk)
     REFERENCES universidad(id),
@@ -121,77 +121,80 @@ tablespace soluciones_moviles_datos;
 --#endregion
 
 --#region Generar IDs
-create or replace TRIGGER id_generador_universidad
-before insert on abd.universidad
-referencing new as new 
+create or replace trigger id_generador_universidad
+before insert on universidad
+referencing new as new
 for each row
-declare temp
+declare nrows INT; max_id INT; 
 begin
    select max(id) into max_id
-   from abd.universidad
-   
+   from abd.universidad;
    select count(*) into nrows
-   from abd.universidad
+   from abd.universidad;
 
-   PRINT nrows
-
-   if (nrows>0) then
-      :new.id = max_id+1
+   if (nrows=0) then
+      :new.id := 1;
    else 
-      :new.id = 1
-   end if
-end
+      :new.id := max_id+1;
+   end if;
+end;
 /
 
 create or replace trigger id_generador_usuario
 before insert on usuario
-referencing new as new 
+referencing new as new
 for each row
-declare temp
+declare nrows INT; max_id INT; 
 begin
-   select max(id) into temp
-   from usuario
+   select max(id) into max_id
+   from abd.usuario;
+   select count(*) into nrows
+   from abd.usuario;
    
-   if (temp>=1) then
-      :new.id = temp+1
+   if (nrows=0) then
+      :new.id := 1;
    else 
-      :new.id = 1
-   end if
-end
+      :new.id := max_id+1;
+   end if;
+end;
 /
 
 create or replace trigger id_generador_evento
 before insert on evento
-referencing new as new 
+referencing new as new
 for each row
-declare temp
+declare nrows INT; max_id INT; 
 begin
-   select max(id) into temp
-   from evento
+   select max(id) into max_id
+   from abd.evento;
+   select count(*) into nrows
+   from abd.evento;
    
-   if (temp>=1) then
-      :new.id = temp+1
+   if (nrows=0) then
+      :new.id := 1;
    else 
-      :new.id = 1
-   end if
-end
+      :new.id := max_id+1;
+   end if;
+end;
 /
 
 create or replace trigger id_generador_empresa
 before insert on empresa
-referencing new as new 
+referencing new as new
 for each row
-declare temp
+declare nrows INT; max_id INT; 
 begin
-   select max(id) into temp
-   from empresa
+   select max(id) into max_id
+   from abd.empresa;
+   select count(*) into nrows
+   from abd.empresa;
    
-   if (temp>=1) then
-      :new.id = temp+1
+   if (nrows=0) then
+      :new.id := 1;
    else 
-      :new.id = 1
-   end if
-end
+      :new.id := max_id+1;
+   end if;
+end;
 /
 --#endregion 
 
@@ -257,36 +260,50 @@ tablespace soluciones_moviles_index;
 --#endregion
 
 --#region TRIGGER. Evitar que participante sea expositor y viceversa
-create trigger restriccion1
+SHOW ERRORS TRIGGER restriccion1;
+create or replace trigger restriccion1
 before insert on dicta
-referencing new as new 
+referencing new as new
 for each row
-declare temp
+declare existe_participante INT; existe_duplicado INT;
 begin
-   select id into temp
-   from participa
-   where :new.evento_fk = participa.evento_fk and :new.usuario_fk = participa.usuario_fk
+   select count(*) into existe_participante
+   from abd.participa
+   where :new.evento_fk = abd.participa.evento_fk and :new.usuario_fk = abd.participa.usuario_fk;
 
-   if id exist then 
-      raise_application_error('Usuario expositor no puede ser participante en un mismo evento')
-   end if
-end
+   select count(*) into existe_duplicado
+   from abd.dicta
+   where :new.evento_fk = abd.dicta.evento_fk and :new.usuario_fk = abd.dicta.usuario_fk;
+
+   --dbms_output.put_line(existe_participante);
+   if (existe_participante>0) then 
+      raise_application_error(-20000, 'Usuario expositor no puede ser participante en un mismo evento');
+   end if;
+
+   --dbms_output.put_line(existe_duplicado);
+   if (existe_duplicado>0) then 
+      raise_application_error(-20000, 'Usuario expositor ya existe en este evento');
+   end if;
+
+   :new.val_contenido := 0;
+   :new.val_ponencia := 0;
+end;
 /
 
-create trigger restriccion2
+create or replace trigger restriccion2
 before insert on participa
-referencing new as new 
+referencing new as new
 for each row
-declare temp
+declare temp INT; 
 begin
-   select id into tem
-   from dicta
-   where :new.evento_fk = dicta.evento_fk and :new.usuario_fk = usuario_fk
+   select count(*) into temp
+   from abd.dicta
+   where :new.evento_fk = dicta.evento_fk and :new.usuario_fk = dicta.usuario_fk;
 
-   if id exist then 
-      raise_application_error('Usuario participante no puede ser expositor en un mismo evento')
-   end if
-end
+   if (temp>0) then 
+      dbms_output.put_line('Usuario participante no puede ser expositor en un mismo evento');
+   end if;
+end;
 /
 --#endregion
 
