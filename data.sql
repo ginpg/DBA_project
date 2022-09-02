@@ -72,6 +72,14 @@ INSERT
 INTO abd.dicta (usuario_fk, evento_fk,nombre_charla)
 VALUES (1,1,'Charla1');  
 
+INSERT 
+INTO abd.dicta (usuario_fk, evento_fk,nombre_charla)
+VALUES (1,3,'Charla3');  
+
+INSERT 
+INTO abd.dicta (usuario_fk, evento_fk,nombre_charla)
+VALUES (2,3,'Charla2');  
+
 /* pertenece */
 INSERT 
 INTO pertenece (usuario_fk, universidad_fk)

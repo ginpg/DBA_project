@@ -307,5 +307,16 @@ end;
 /
 --#endregion
 
+--#region VIEW para accesos rapidos
+CREATE VIEW charlas_view AS
+SELECT u.nombre, u.apellido, d.nombre_charla charla, e.nombre evento
+FROM usuario u, dicta d, evento e
+WHERE u.id = d.usuario_fk and d.evento_fk = e.id;
 
+CREATE VIEW patrocinados_view AS
+SELECT e.nombre evento, em.nombre empresa
+FROM evento e, empresa em, patrocina p
+WHERE e.id = p.evento_fk and em.id = p.empresa_fk;
+
+--#endregion
 /* Hasta aqui se ha ejecutado bien. Hay que probar con datos a ver si funciona correctamente*/ 
