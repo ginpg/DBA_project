@@ -295,4 +295,4 @@ FROM evento e, empresa em, patrocina p
 WHERE e.id = p.evento_fk and em.id = p.empresa_fk;
 
 --#endregion
-/* Hasta aqui se ha ejecutado bien. Hay que probar con datos a ver si funciona correctamente*/ 
+ 
