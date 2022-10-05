@@ -71,7 +71,13 @@ create table dicta(
     REFERENCES usuario(id),
    CONSTRAINT participa_fk4
     FOREIGN KEY (evento_fk)
-    REFERENCES evento(id)
+    REFERENCES evento(id),
+   CONSTRAINT check_puntuacion_ponencia CHECK (
+      val_ponencia BETWEEN 1 AND 5
+   ),
+   CONSTRAINT check_puntuacion_contenido CHECK (
+      val_contenido BETWEEN 1 AND 5
+   )
 ) 
 tablespace soluciones_moviles_datos;
 
