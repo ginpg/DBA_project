@@ -38,17 +38,7 @@ VALUES (3,1);
 /* dicta */
 INSERT 
 INTO abd.dicta (usuario_fk, evento_fk,nombre_charla, val_ponencia, val_contenido)
-VALUES (2,1,'Charla1', 5,5);  
-/*ESTO DEBE DAR ERROR PORQUE YA EXISTE COMO PARTICIPANTE*/
-
-INSERT 
-INTO abd.dicta (usuario_fk, evento_fk,nombre_charla, val_ponencia, val_contenido)
 VALUES (1,1,'Charla1',3,4);  
-
-INSERT 
-INTO abd.dicta (usuario_fk, evento_fk,nombre_charla, val_ponencia, val_contenido)
-VALUES (1,3,'Charla3',1,0 );  
-/*Da error, val_contenido no esta entre 1 y 5*/
 
 INSERT 
 INTO abd.dicta (usuario_fk, evento_fk,nombre_charla, val_ponencia, val_contenido)

@@ -64,8 +64,8 @@ create table dicta(
    usuario_fk INT,
    evento_fk INT,
    nombre_charla VARCHAR2(50),
-   val_contenido NUMBER(1,0),
-   val_ponencia NUMBER(1,0),
+   val_contenido NUMBER(4),
+   val_ponencia NUMBER(4),
    CONSTRAINT participa_fk3
     FOREIGN KEY (usuario_fk)
     REFERENCES usuario(id),
@@ -198,6 +198,9 @@ grant select, insert, delete, update
 on abd.participa
 to Organizador;
 grant select, insert, delete, update
+on abd.pertenece
+to Organizador;
+grant select, insert, delete, update
 on abd.dicta
 to Organizador;
 
@@ -206,7 +209,7 @@ create role Administrador;
 grant create session to Administrador;
 grant select, insert, delete, update
 on abd.universidad
-to Administrador1;
+to Administrador;
 grant select, insert, delete, update
 on abd.empresa
 to Administrador;
