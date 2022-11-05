@@ -64,8 +64,8 @@ create table dicta(
    usuario_fk INT,
    evento_fk INT,
    nombre_charla VARCHAR2(50),
-   val_contenido NUMBER(1,0),
-   val_ponencia NUMBER(1,0),
+   val_contenido NUMBER(4),
+   val_ponencia NUMBER(4),
    CONSTRAINT participa_fk3
     FOREIGN KEY (usuario_fk)
     REFERENCES usuario(id),
