@@ -43,7 +43,7 @@ create table evento(
    f_inicio DATE,
    f_final DATE,
    descripcion VARCHAR2(100),
-   area NUMBER(1,0),
+   area VARCHAR2(100),
    PRIMARY KEY (id)
 ) 
 tablespace soluciones_moviles_datos;
