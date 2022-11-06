@@ -63,3 +63,6 @@ EXPLAIN PLAN FOR
   FROM empresa, evento, patrocina
   WHERE empresa.privada = 1 AND empresa.id = patrocina.empresa_fk AND evento.id = patrocina.empresa_fk AND evento.area = 'Tecnologia' and extract( year from evento.f_inicio) = 2019 OR extract( year from evento.f_final) = 2021;
 
+-- Imprimir plan de ejecución
+-- format => 'ALL' | 'BASIC'
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY(format => 'BASIC'));
